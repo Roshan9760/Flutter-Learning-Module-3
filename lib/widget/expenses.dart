@@ -26,6 +26,15 @@ class _ExprensesSatate extends State<Exprenses> {
   @override
   Widget build(context) {
     return Scaffold(
+      appBar: AppBar(
+        title:const Text("Flutter Expense Tracker App"),
+        actions: [
+          IconButton(
+            onPressed: (){}, 
+            icon:const  Icon(Icons.add),
+            ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
