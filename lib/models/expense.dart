@@ -3,6 +3,8 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 final uuid = Uuid();
+final dateFomatter = DateFormat.yMd();
+
 
 enum Category { food, travel, leisure, work }
 
@@ -13,7 +15,7 @@ const CategoryIcons = {
   Category.travel: Icons.flight_takeoff
 };
 
-final dateFomatter = DateFormat.yMd();
+
 
 class Expense {
   Expense(

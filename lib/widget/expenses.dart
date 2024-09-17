@@ -36,6 +36,7 @@ class _ExprensesSatate extends State<Exprenses> {
   @override
   Widget build(context) {
     return Scaffold(
+      
       appBar: AppBar(
         title: Text("Flutter Expense Tracker App"),
         actions: [
