@@ -1,4 +1,5 @@
 import 'package:expensetrackerapp/widget/expenses_list/expenses_list.dart';
+import 'package:expensetrackerapp/widget/new_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:expensetrackerapp/models/expense.dart';
 
@@ -23,26 +24,35 @@ class _ExprensesSatate extends State<Exprenses> {
         date: DateTime.now(),
         category: Category.food)
   ];
+
+  void _openAndAddExpenseOverley() {
+    showModalBottomSheet(
+        context: context,
+        builder: (cntx) {
+          return const NewExpense();
+        });
+  }
+
   @override
   Widget build(context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text("Flutter Expense Tracker App"),
+        title: Text("Flutter Expense Tracker App"),
         actions: [
           IconButton(
-            onPressed: (){}, 
-            icon:const  Icon(Icons.add),
-            ),
+            onPressed: _openAndAddExpenseOverley,
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('The Chart of Expenses'),
-            Expanded(child: ExpensesList(expenses: _registeredExpensed)),
-        ]),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('The Chart of Expenses'),
+              Expanded(child: ExpensesList(expenses: _registeredExpensed)),
+            ]),
       ),
     );
   }
