@@ -25,18 +25,32 @@ class _ExprensesSatate extends State<Exprenses> {
         category: Category.food)
   ];
 
+  void _addExpenses(Expense expense) {
+    setState(() {
+      _registeredExpensed.add(expense);
+    });
+  }
+
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpensed.remove(expense);
+    });
+  }
+
   void _openAndAddExpenseOverley() {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (cntx) {
-          return const NewExpense();
+          return NewExpense(
+            onAddNewExpense: _addExpenses,
+          );
         });
   }
 
   @override
   Widget build(context) {
     return Scaffold(
-      
       appBar: AppBar(
         title: Text("Flutter Expense Tracker App"),
         actions: [
@@ -52,7 +66,11 @@ class _ExprensesSatate extends State<Exprenses> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('The Chart of Expenses'),
-              Expanded(child: ExpensesList(expenses: _registeredExpensed)),
+              Expanded(child: ExpensesList(
+                expenses: _registeredExpensed,
+                onRemoveExpense: _removeExpense,
+                ),
+            ),
             ]),
       ),
     );

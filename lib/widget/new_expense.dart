@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:expensetrackerapp/models/expense.dart';
+import 'package:expensetrackerapp/models/expense.dart'; // Assuming you have this file
+
+
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+   NewExpense({super.key,required this.onAddNewExpense});
+
+  final void Function (Expense expense) onAddNewExpense;
+
   @override
   State<NewExpense> createState() {
-    return _NewExpenseSatate();
+    return _NewExpenseState();
   }
 }
 
-class _NewExpenseSatate extends State<NewExpense> {
+class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
-  Category? _selectedCategory=Category.food;
+  Category? _selectedCategory = Category.food;
 
-  //  to delete the controller after usage
+  // Date picker function
   void _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
@@ -30,6 +35,48 @@ class _NewExpenseSatate extends State<NewExpense> {
     });
   }
 
+  // Submission function
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountInValid = enteredAmount == null || enteredAmount <= 0;
+
+    if (_titleController.text.trim().isEmpty ||
+        amountInValid ||
+        _selectedDate == null) {
+      // show error message
+
+      showDialog(
+          context: context,
+          builder: (cntx) => AlertDialog(
+                title: const Text('Invalid Input details !'),
+                content: const Text(
+                    'Please Make Sure Correct or valid title,amount and date entered '),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(cntx);
+                      },
+                      child: Text('Okay'))
+                ],
+              )
+        );
+      return;
+    }
+
+    // add new expense
+    widget.onAddNewExpense(
+      Expense(
+        title: _titleController.text, 
+        amount: enteredAmount, 
+        date: _selectedDate!, 
+        category: _selectedCategory!,
+      ),
+     
+    );
+    Navigator.pop(context);
+  }
+
+  // Dispose controllers after usage
   @override
   void dispose() {
     _titleController.dispose();
@@ -39,9 +86,8 @@ class _NewExpenseSatate extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           TextField(
@@ -56,41 +102,39 @@ class _NewExpenseSatate extends State<NewExpense> {
                   keyboardType: TextInputType.number,
                   controller: _amountController,
                   decoration: const InputDecoration(
-                      label: Text('Amount'), prefixText: '\$'),
+                      label: Text('Amount'), prefixText: '\$ '),
                 ),
               ),
-              const SizedBox(
-                width: 16,
-              ),
+              const SizedBox(width: 16),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(_selectedDate == null
-                        ? "No Date Selected "
+                        ? "No Date Selected"
                         : dateFomatter.format(_selectedDate!)),
                     IconButton(
-                      onPressed: () {
-                        _presentDatePicker();
-                      },
-                      icon: Icon(Icons.calendar_month),
-                    )
+                      onPressed: _presentDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
+          const SizedBox(height: 16), // Add spacing between elements
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Dropdown on the left
               DropdownButton(
-                 value: _selectedCategory, 
+                value: _selectedCategory,
                 items: Category.values
-                    .map((category) => DropdownMenuItem(
+                    .map(
+                      (category) => DropdownMenuItem(
                         value: category,
-                        child: Text(
-                          category.name.toUpperCase(),
-                        ),
+                        child: Text(category.name.toUpperCase()),
                       ),
                     )
                     .toList(),
@@ -102,21 +146,25 @@ class _NewExpenseSatate extends State<NewExpense> {
                   });
                 },
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Cancel'),
+              // Buttons (Cancel and Save) on the right
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _submitExpenseData();
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  print(_titleController.text);
-                  print(_amountController.text);
-                },
-                child: const Text('Save The Title'),
-              )
             ],
-          )
+          ),
         ],
       ),
     );
