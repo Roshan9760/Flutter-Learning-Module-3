@@ -1,3 +1,4 @@
+import 'package:expensetrackerapp/widget/chart/chart.dart';
 import 'package:expensetrackerapp/widget/expenses_list/expenses_list.dart';
 import 'package:expensetrackerapp/widget/new_expense.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class _ExprensesSatate extends State<Exprenses> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('The Chart of Expenses'),
+              Chart(expenses: _registeredExpensed),
               Expanded(child: mainContent),
             ]),
       ),
