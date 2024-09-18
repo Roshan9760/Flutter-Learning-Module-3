@@ -54,6 +54,7 @@ class _ExprensesSatate extends State<Exprenses> {
 
   void _openAndAddExpenseOverley() {
     showModalBottomSheet(
+      useSafeArea: true,
         isScrollControlled: true,
         context: context,
         builder: (cntx) {
@@ -62,6 +63,7 @@ class _ExprensesSatate extends State<Exprenses> {
           );
         });
   }
+
 
   @override
   Widget build(context) {
@@ -75,6 +77,9 @@ class _ExprensesSatate extends State<Exprenses> {
         onRemoveExpense: _removeExpense,
       );
     }
+
+    final width = MediaQuery.of(context).size.width;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("Flutter Expense Tracker App"),
@@ -86,14 +91,21 @@ class _ExprensesSatate extends State<Exprenses> {
         ],
       ),
       body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Chart(expenses: _registeredExpensed),
-              Expanded(child: mainContent),
-            ]),
-      ),
+          child: width < 600
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      Chart(expenses: _registeredExpensed),
+                      Expanded(child: mainContent),
+                    ])
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      Expanded(child: Chart(expenses: _registeredExpensed)),
+                      Expanded(child: mainContent),
+                    ])),
     );
   }
 }
